@@ -1,11 +1,6 @@
 package com.example.slidepuzzle;
 
-import android.net.Uri;
-import android.util.Log;
-
-import java.io.Serializable;
-
-public class Options implements Serializable
+public class Options
 {
     private String imagePath;
     private int rows;
@@ -34,6 +29,24 @@ public class Options implements Serializable
         this.allowHint = false;
         this.invertControls = false;
         this.randomStart = false;
+    }
+
+    public Options(String imagePath, int rows, int columns, boolean allowNumber, int numberColor,
+                   int numberSize, boolean allowOutline, int outlineColor, int outlineSize, boolean allowHint,
+                   boolean invertControls, boolean randomStart)
+    {
+        this.imagePath = imagePath;
+        this.rows = rows;
+        this.columns = columns;
+        this.allowNumber = allowNumber;
+        this.numberColor = numberColor;
+        this.numberSize = numberSize;
+        this.allowOutline = allowOutline;
+        this.outlineColor = outlineColor;
+        this.outlineSize = outlineSize;
+        this.allowHint = allowHint;
+        this.invertControls = invertControls;
+        this.randomStart = randomStart;
     }
 
     public String getImagePath()

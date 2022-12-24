@@ -4,6 +4,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class TitleActivity extends AppCompatActivity
 {
+    private SharedPreferences sp;
     private Options options;
     private ActivityResultLauncher<Intent> arl;
     private int numberColor;
@@ -28,17 +30,10 @@ public class TitleActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.title_activity);
-        this.options = new Options();
 
-//        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-//        {}
-//        else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE))
-//        {}
-//        else
-//        {
-//            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//        }
-
+        this.sp = getSharedPreferences("Options", MODE_PRIVATE);
+        //this.options = new Options();
+        restoreOptions();
 
         this.arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), uri ->
         {
@@ -65,9 +60,98 @@ public class TitleActivity extends AppCompatActivity
                 }
             }
         });
+    }
 
-        this.numberColor = 0;
-        this.outlineColor = 0;
+    private void restoreOptions()
+    {
+        this.options = new Options(
+                this.sp.getString("imagePath", null),
+                this.sp.getInt("rows", 5),
+                this.sp.getInt("columns", 5),
+                this.sp.getBoolean("allowNumber", false),
+                this.sp.getInt("numberColor", 0),
+                this.sp.getInt("numberSize", 16),
+                this.sp.getBoolean("allowOutline", false),
+                this.sp.getInt("outlineColor", 0),
+                this.sp.getInt("outlineSize", 10),
+                this.sp.getBoolean("allowHint", false),
+                this.sp.getBoolean("invertControls", false),
+                this.sp.getBoolean("randomStart", false)
+        );
+        this.numberColor = this.options.getNumberColor();
+        this.outlineColor = this.options.getOutlineColor();
+        restoreUI();
+    }
+
+    private void restoreUI()
+    {
+        ImageView img = findViewById(R.id.image_preview);
+        img.setImageBitmap(BitmapFactory.decodeFile(this.options.getImagePath()));
+
+        EditText rows = findViewById(R.id.rows_number);
+        rows.setText(Integer.toString(this.options.getRows()));
+
+        EditText columns = findViewById(R.id.columns_number);
+        columns.setText(Integer.toString(this.options.getColumns()));
+
+        CheckBox bool = findViewById(R.id.display_numbers_check_box);
+        bool.setChecked(this.options.getAllowNumber());
+
+        View colorView = (View) findViewById(R.id.number_color_view);
+        colorView.setBackgroundColor(this.options.getNumberColor());
+
+        EditText numberSize = findViewById(R.id.number_size_number);
+        numberSize.setText(Integer.toString(this.options.getNumberSize()));
+
+        bool = findViewById(R.id.display_outline_check_box);
+        bool.setChecked(this.options.getAllowOutline());
+
+        colorView = (View) findViewById(R.id.outline_color_view);
+        colorView.setBackgroundColor(this.options.getOutlineColor());
+
+        EditText outlineSize = findViewById(R.id.outline_size_number);
+        outlineSize.setText(Integer.toString(this.options.getOutlineSize()));
+
+        bool = findViewById(R.id.invert_controls_check_box);
+        bool.setChecked(this.options.getInvertControls());
+
+        bool = findViewById(R.id.allow_hint_check_box);
+        bool.setChecked(this.options.getAllowHint());
+
+        bool = findViewById(R.id.randomize_start_check_box);
+        bool.setChecked(this.options.getRandomStart());
+
+    }
+
+    public void saveOptions(View view)
+    {
+        SharedPreferences.Editor editor = this.sp.edit();
+
+        editor.putString("imagePath", null);
+        EditText rows = findViewById(R.id.rows_number);
+        editor.putInt("rows", Integer.parseInt(rows.getText().toString()));
+        EditText columns = findViewById(R.id.columns_number);
+        editor.putInt("columns", Integer.parseInt(columns.getText().toString()));
+        CheckBox bool = findViewById(R.id.display_numbers_check_box);
+        editor.putBoolean("allowNumber", bool.isChecked());
+        editor.putInt("numberColor", this.numberColor);
+        EditText numberSize = findViewById(R.id.number_size_number);
+        editor.putInt("numberSize", Integer.parseInt(numberSize.getText().toString()));
+        bool = findViewById(R.id.display_outline_check_box);
+        editor.putBoolean("allowOutline", bool.isChecked());
+        editor.putInt("outlineColor", this.outlineColor);
+        EditText outlineSize = findViewById(R.id.outline_size_number);
+        editor.putInt("outlineSize", Integer.parseInt(outlineSize.getText().toString()));
+        bool = findViewById(R.id.invert_controls_check_box);
+        editor.putBoolean("invertControls", bool.isChecked());
+        bool = findViewById(R.id.allow_hint_check_box);
+        editor.putBoolean("allowHint", bool.isChecked());
+        bool = findViewById(R.id.randomize_start_check_box);
+        editor.putBoolean("randomStart", bool.isChecked());
+
+        editor.commit();
+
+        Toast.makeText(this, "Settings Saved", Toast.LENGTH_SHORT).show();
     }
 
     public void startGame(View view)
@@ -79,27 +163,6 @@ public class TitleActivity extends AppCompatActivity
         }
 
         Intent main = new Intent(this, MainActivity.class);
-//        EditText rows = (EditText) findViewById(R.id.rows_number);
-//        this.options.setRows(Integer.parseInt(rows.getText().toString()));
-//        EditText columns = (EditText) findViewById(R.id.columns_number);
-//        this.options.setColumns(Integer.parseInt(columns.getText().toString()));
-//        CheckBox bool = (CheckBox) findViewById(R.id.display_numbers_check_box);
-//        this.options.setAllowNumber(bool.isChecked());
-//        this.options.setNumberColor(this.numberColor);
-//        EditText numberSize = (EditText) findViewById(R.id.number_size_number);
-//        this.options.setNumberSize(Integer.parseInt(numberSize.getText().toString()));
-//        bool = (CheckBox) findViewById(R.id.display_outline_check_box);
-//        this.options.setAllowOutline(bool.isChecked());
-//        EditText outlineSize = (EditText) findViewById(R.id.outline_size_number);
-//        this.options.setOutlineSize(Integer.parseInt(outlineSize.getText().toString()));
-//        bool = (CheckBox) findViewById(R.id.invert_controls_check_box);
-//        this.options.setInvertControls(bool.isChecked());
-//        bool = (CheckBox) findViewById(R.id.allow_hint_check_box);
-//        this.options.setAllowHint(bool.isChecked());
-//        bool = (CheckBox) findViewById(R.id.randomize_start_check_box);
-//        this.options.setRandomStart(bool.isChecked());
-//
-//        main.putExtra("Options", this.options);
 
         main.putExtra("ImagePath", this.options.getImagePath());
         EditText rows = findViewById(R.id.rows_number);
@@ -122,6 +185,7 @@ public class TitleActivity extends AppCompatActivity
         main.putExtra("Hint", bool.isChecked());
         bool = findViewById(R.id.randomize_start_check_box);
         main.putExtra("Random", bool.isChecked());
+
         startActivity(main);
     }
 

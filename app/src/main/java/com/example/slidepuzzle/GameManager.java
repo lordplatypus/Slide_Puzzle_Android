@@ -35,7 +35,7 @@ public class GameManager extends GameObject
     {
         if (this.image.getWidth() > this.game.getWidth() || this.image.getHeight() > this.game.getHeight())
         {
-            if (this.image.getWidth() > this.image.getHeight())
+            if (this.image.getWidth() - this.game.getWidth() > this.image.getHeight() - this.game.getHeight())
             {
                 float w = this.game.getWidth();
                 float h = this.image.getHeight() / (this.image.getWidth() / w);
@@ -44,7 +44,7 @@ public class GameManager extends GameObject
             else
             {
                 float h = this.game.getHeight();
-                float w = image.getWidth() / (image.getHeight() / h);
+                float w = this.image.getWidth() / (this.image.getHeight() / h);
                 this.image = Bitmap.createScaledBitmap(image, (int) w, (int) h, true);
             }
         }
@@ -54,6 +54,9 @@ public class GameManager extends GameObject
             float h = image.getHeight() + (w - this.image.getWidth());
             this.image = Bitmap.createScaledBitmap(image, (int) w, (int) h, true);
         }
+
+        Log.v("Image width", Integer.toString(this.image.getWidth()));
+        Log.v("Image height", Integer.toString(this.image.getHeight()));
     }
 
     private void CreateBoxes()

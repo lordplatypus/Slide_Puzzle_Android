@@ -75,7 +75,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback
             {
                 e.printStackTrace();
             }
-            retry = true;
+            retry = false;
         }
     }
 
@@ -88,6 +88,11 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback
             return true;
         }
         return super.onTouchEvent(event);
+    }
+
+    public GameThread getGameThread()
+    {
+        return this.gameThread;
     }
 
     public GameObjectManager getGameObjectManager()

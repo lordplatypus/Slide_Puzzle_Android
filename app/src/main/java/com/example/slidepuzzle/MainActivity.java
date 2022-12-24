@@ -13,8 +13,7 @@ import android.view.Window;
 public class MainActivity extends AppCompatActivity
 {
     private Options options;
-    private ActivityResultLauncher<Intent> test;
-    private Bitmap bm;
+    private GameSurface game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -24,8 +23,20 @@ public class MainActivity extends AppCompatActivity
         this.options = new Options();
 
         retrieveData();
-        this.setContentView(new GameSurface(this, this.options));
+        this.game = new GameSurface(this, this.options);
+        this.setContentView(this.game);
     }
+
+//    @Override
+//    public void onBackPressed()
+//    {
+//        this.game.getGameThread().setRunning(false);
+//        Intent title = new Intent(this, TitleActivity.class);
+//        title.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        startActivity(title);
+//        finish();
+//    }
+
 
     private void retrieveData()
     {

@@ -46,4 +46,19 @@ public class GameObjectManager
         }
         return null;
     }
+
+    public GameObject searchByTag(String tag)
+    {
+        for (int i = 0; i < this.gameObjects.size(); i++)
+        {
+            GameObject go = this.gameObjects.get(i);
+            if (go.getTag() == tag) return go;
+        }
+        return null;
+    }
+
+    public void clear()
+    {
+        this.gameObjects.clear();
+    }
 }
